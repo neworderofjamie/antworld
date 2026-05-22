@@ -1,5 +1,5 @@
-#include "antworld/surface.h"
-#include "antworld/texture.h"
+#include "surface.h"
+#include "texture.h"
 
 //----------------------------------------------------------------------------
 // BoBRobotics::AntWorlds::Surfaces

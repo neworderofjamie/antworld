@@ -1,9 +1,7 @@
 #pragma once
 
 // BoB robotics includes
-#include "common/pose.h"
-#include "video/opengl/opengl.h"
-#include "antworld/renderer.h"
+#include "renderer.h"
 
 // SFML
 #include <SFML/Graphics.hpp>
@@ -11,14 +9,10 @@
 // Standard C++ includes
 #include <memory>
 
-namespace BoBRobotics {
 namespace AntWorld {
 class Camera
-  : public Video::OpenGL
 {
 protected:
-    using meter_t = units::length::meter_t;
-    using degree_t = units::angle::degree_t;
 
 public:
     Camera(sf::Window &window,
@@ -26,24 +20,27 @@ public:
            const cv::Size &renderSize);
 
     void display();
-    Pose3<meter_t, degree_t> getPose() const;
     sf::Window &getWindow() const;
     bool isOpen() const;
-    void setPose(const Pose3<meter_t, degree_t> &pose);
     void setPosition(meter_t x, meter_t y, meter_t z);
     void setAttitude(degree_t yaw, degree_t pitch, degree_t roll);
 
     // Virtuals
-    virtual bool readFrame(cv::Mat &outFrame) override;
+    bool readFrame(cv::Mat &outFrame) override;
 
     static std::unique_ptr<sf::Window> initialiseWindow(const cv::Size &size);
 
 private:
-    Pose3<meter_t, degree_t> m_Pose;
+    meter_t m_PoseX;
+    meter_t m_PoseY;
+    meter_t m_PoseZ;
+    degree_t m_PoseYaw;
+    degree_t m_PosePitch;
+    degree_t m_PoseRoll;
+    
     sf::Window &m_Window;
     Renderer &m_Renderer;
 
     void update();
 }; // Camera
 } // AntWorld
-} // BoBRobotics

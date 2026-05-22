@@ -1,11 +1,6 @@
 // BoB robotics includes
-#include "antworld/common.h"
-#include "antworld/world.h"
-#include "common/macros.h"
-#include "plog/Log.h"
-
-// Third-party includes
-#include "third_party/path.h"
+#include "common.h"
+#include "world.h"
 
 // OpenCV includes
 #include <opencv2/opencv.hpp>

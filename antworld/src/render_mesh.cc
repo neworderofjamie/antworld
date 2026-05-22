@@ -1,6 +1,6 @@
 // BoB robotics includes
-#include "antworld/common.h"
-#include "antworld/render_mesh.h"
+#include "common.h"
+#include "render_mesh.h"
 
 // Standard C++ includes
 #include <vector>
@@ -12,10 +12,8 @@ using namespace units::angle;
 using namespace units::math; // cmath functions for unit types
 
 //----------------------------------------------------------------------------
-// BoBRobotics::AntWorld::RenderMesh
+// AntWorld::RenderMesh
 //----------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 void RenderMesh::render() const
@@ -237,6 +235,5 @@ RenderMeshCubeMap::RenderMeshCubeMap()
 }
 
 }   // namespace AntWorld
-}   // namespace BoBRobotics
 
 

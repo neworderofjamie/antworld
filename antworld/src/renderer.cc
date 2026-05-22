@@ -1,6 +1,6 @@
 // BoB robotics includes
-#include "antworld/renderer.h"
-#include "antworld/render_target.h"
+#include "renderer.h"
+#include "render_target.h"
 
 // Standard C++ includes
 #include <stdexcept>

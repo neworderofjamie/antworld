@@ -1,4 +1,4 @@
-#include "antworld/texture.h"
+#include "texture.h"
 
 // OpenCV includes
 #include <opencv2/opencv.hpp>

@@ -1,6 +1,6 @@
 // BoB robotics includes
-#include "antworld/render_target.h"
-#include "antworld/render_target_input.h"
+#include "render_target.h"
+#include "render_target_input.h"
 
 //----------------------------------------------------------------------------
 // BoBRobotics::AntWorld::RenderTargetInput
