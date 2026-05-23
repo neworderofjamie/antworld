@@ -1,7 +1,8 @@
-**/x64/
+x64
+.vs
+vcpkg_installed
 *.vcxproj.user
 *.d
-/**/.vs
 *.exe
 *.pdb
 /**/__pycache__/
