@@ -1,6 +1,7 @@
 #pragma once
 
 // Standard C++ includes
+#include <filesystem>
 #include <map>
 #include <memory>
 #include <string>
@@ -10,6 +11,7 @@
 #include <GL/glew.h>
 
 // Libantworld include
+#include "export.h"
 #include "surface.h"
 #include "texture.h"
 
@@ -30,7 +32,7 @@ namespace filesystem
 //! Provides a means for loading a world stored on disk into OpenGL
 namespace AntWorld
 {
-class World
+class ANTWORLD_EXPORT World
 {
     using meter_t = units::length::meter_t;
 
@@ -41,9 +43,9 @@ public:
     // Public API
     //------------------------------------------------------------------------
     void render() const;
-    void load(const filesystem::path &filename, const GLfloat (&worldColour)[3],
+    void load(const std::filesystem::path &filename, const GLfloat (&worldColour)[3],
               const GLfloat (&groundColour)[3], bool clear = true);
-    void loadObj(const filesystem::path &objFilename, float scale = 1.0f,
+    void loadObj(const std::filesystem::path &objFilename, float scale = 1.0f,
                  int maxTextureSize = -1, GLint textureFormat = GL_RGB, 
                  bool clear = true);
 
@@ -64,7 +66,7 @@ private:
     //------------------------------------------------------------------------
     // Private methods
     //------------------------------------------------------------------------
-    void loadMaterials(const filesystem::path &basePath, const std::string &filename,
+    void loadMaterials(const std::filesystem::path &basePath, const std::string &filename,
                        GLint textureFormat, int maxTextureSize,
                        std::map<std::string, std::tuple<Texture*, Surface::Colour>> &materialNames);
 

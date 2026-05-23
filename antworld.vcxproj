@@ -30,6 +30,7 @@
   <ItemGroup>
     <ClInclude Include="include\camera.h" />
     <ClInclude Include="include\common.h" />
+    <ClInclude Include="include\export.h" />
     <ClInclude Include="include\opengl_type_traits.h" />
     <ClInclude Include="include\renderer.h" />
     <ClInclude Include="include\render_mesh.h" />
@@ -88,7 +89,7 @@
       <ConformanceMode>true</ConformanceMode>
       <DisableSpecificWarnings Condition=" $(Configuration.Contains('DLL')) ">4251</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)vcpkg_installed\x64-windows\x64-windows\include\opencv4;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

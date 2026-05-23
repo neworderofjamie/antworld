@@ -4,7 +4,7 @@
 #include <GL/glew.h>
 
 //----------------------------------------------------------------------------
-// BoBRobotics::AntWorld::OpenGLTypeTraits
+// AntWorld::OpenGLTypeTraits
 //----------------------------------------------------------------------------
 namespace AntWorld
 {

@@ -1,10 +1,7 @@
 #pragma once
 
 // Standard C++ includes
-#include <algorithm>
 #include <memory>
-#include <string>
-#include <vector>
 
 // OpenGL includes
 #include <GL/glew.h>
@@ -13,33 +10,36 @@
 #include <units.h>
 
 // Antworld includes
+#include "export.h"
 #include "render_mesh.h"
 #include "world.h"
 
 namespace AntWorld
 {
 class RenderTarget;
-using namespace units::literals;
+}
 
 //----------------------------------------------------------------------------
-// Renderer
+// AntWorld::Renderer
 //----------------------------------------------------------------------------
 //! Helper class which combines a world with a rendermesh to allow ant views of world to be rendered to screen
-class Renderer
+namespace AntWorld
+{
+class ANTWORLD_EXPORT Renderer
 {
     using degree_t = units::angle::degree_t;
     using meter_t = units::length::meter_t;
 
 public:
-    static const struct SphericalRenderMesh{} sphericalRenderMesh;
-    static const struct CubeMapRenderMesh{} cubeMapRenderMesh;
+    static inline const struct SphericalRenderMesh{} sphericalRenderMesh;
+    static inline const struct CubeMapRenderMesh{} cubeMapRenderMesh;
 
     // Legacy spherical cubemap constructor
     Renderer(GLsizei cubemapSize = 256, double nearClip = 0.001, double farClip = 1000.0,
-             degree_t horizontalFOV = 360_deg, degree_t verticalFOV = 75_deg);
+             degree_t horizontalFOV = degree_t{360.0}, degree_t verticalFOV = degree_t{75.0});
         
     Renderer(SphericalRenderMesh, GLsizei cubemapSize = 256, double nearClip = 0.001, double farClip = 1000.0,
-             degree_t horizontalFOV = 360_deg, degree_t verticalFOV = 75_deg);
+             degree_t horizontalFOV = degree_t{360.0}, degree_t verticalFOV = degree_t{75.0});
     Renderer(CubeMapRenderMesh, GLsizei cubemapSize = 256, double nearClip = 0.001, double farClip = 1000.0);
 
     virtual ~Renderer();

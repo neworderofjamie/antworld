@@ -8,6 +8,10 @@
 // Standard C includes
 #include <cassert>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 // OpenGL includes
 #include <GL/glew.h>
 #include <GL/glu.h>

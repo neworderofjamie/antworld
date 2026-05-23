@@ -5,6 +5,13 @@
 // Standard C++ includes
 #include <stdexcept>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
+// OpenGL includes
+#include <GL/glu.h>
+
 //------------------------------------------------------------------------
 // AntWorld::Renderer
 //------------------------------------------------------------------------
@@ -22,7 +29,7 @@ Renderer::Renderer(GLsizei cubemapSize, double nearClip, double farClip,
 //----------------------------------------------------------------------------
 Renderer::Renderer(SphericalRenderMesh, GLsizei cubemapSize, double nearClip, double farClip,
                    degree_t horizontalFOV, degree_t verticalFOV)
-:   Renderer(std::make_unique<RenderMeshSpherical>(horizontalFOV, verticalFOV, 15_deg, 40, 10),
+:   Renderer(std::make_unique<RenderMeshSpherical>(horizontalFOV, verticalFOV, degree_t{15.0}, 40, 10),
              cubemapSize, nearClip, farClip)
 {
 }

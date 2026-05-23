@@ -1,19 +1,24 @@
 #pragma once
 
-// Third-party includes
+// Units
 #include <units.h>
 
-// Lib antworld includes
+// Antworld includes
+#include "export.h"
 #include "surface.h"
 
 namespace AntWorld
 {
 class Render;
+}
+
 //----------------------------------------------------------------------------
-// BoBRobotics::AntWorld::RenderMesh
+// AntWorld::RenderMesh
 //----------------------------------------------------------------------------
 //! Class for generating geometry on which to render cubemap to screen
-class RenderMesh
+namespace AntWorld
+{
+class ANTWORLD_EXPORT RenderMesh
 {
 public:
     virtual ~RenderMesh()
@@ -40,11 +45,11 @@ private:
 };
 
 //----------------------------------------------------------------------------
-// BoBRobotics::AntWorld::RenderMeshSpherical
+// AntWorld::RenderMeshSpherical
 //----------------------------------------------------------------------------
 //! Class for sampling cubemap across a range of spherical coordiates defined by horizontal and vertical FOV,
 //! converting these to cartesian coordinates and rendering them to grid with desired number of horizontal and vertical segments
-class RenderMeshSpherical : public RenderMesh
+ANTWORLD_EXPORT class RenderMeshSpherical : public RenderMesh
 {
 public:
     RenderMeshSpherical(units::angle::degree_t horizontalFOV, units::angle::degree_t verticalFOV, units::angle::degree_t startLongitude,
@@ -55,7 +60,7 @@ public:
 // BoBRobotics::AntWorld::RenderMeshCubeMap
 //----------------------------------------------------------------------------
 //! Class for rendering cubemap straight back onto a unwrapped cube
-class RenderMeshCubeMap : public RenderMesh
+ANTWORLD_EXPORT class RenderMeshCubeMap : public RenderMesh
 {
 public:
     RenderMeshCubeMap();

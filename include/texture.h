@@ -3,6 +3,9 @@
 // OpenGL includes
 #include <GL/glew.h>
 
+// Antworld includes
+#include "export.h"
+
 // Forward declarations
 namespace cv
 {
@@ -10,11 +13,11 @@ namespace cv
 }
 
 //------------------------------------------------------------------------
-// BoBRobotics::AntWorld::Texture
+// AntWorld::Texture
 //------------------------------------------------------------------------
 namespace AntWorld
 {
-class Texture
+class ANTWORLD_EXPORT Texture
 {
 public:
     Texture();

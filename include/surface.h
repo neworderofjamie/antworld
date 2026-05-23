@@ -7,8 +7,9 @@
 // OpenGL includes
 #include <GL/glew.h>
 
-// Libantworld includes
+// Antworld includes
 #include "common.h"
+#include "export.h"
 #include "opengl_type_traits.h"
 
 // Forward declarations
@@ -18,12 +19,12 @@ class Texture;
 }
 
 //------------------------------------------------------------------------
-// Surface
+// AntWorld::Surface
 //------------------------------------------------------------------------
 // Encapsulates a single 'surface' - geometry to be rendered in one draw call using one material
 namespace AntWorld
 {
-class Surface
+class ANTWORLD_EXPORT Surface
 {
 public:
     Surface();

@@ -1,9 +1,12 @@
-// BoB robotics includes
+// Antworld includes
 #include "common.h"
 #include "world.h"
 
 // OpenCV includes
 #include <opencv2/opencv.hpp>
+
+// Plog
+#include <plog/Log.h>
 
 // Standard C++ includes
 #include <algorithm>
@@ -122,7 +125,7 @@ World::World() : m_MinBound{0_m, 0_m, 0_m}, m_MaxBound{0_m, 0_m, 0_m}
 {
 }
 //----------------------------------------------------------------------------
-void World::load(const filesystem::path &filename, const GLfloat (&worldColour)[3],
+void World::load(const std::filesystem::path &filename, const GLfloat (&worldColour)[3],
                  const GLfloat (&groundColour)[3], bool clear)
 {
     LOGI << "Loading " << filename << "...";
@@ -137,7 +140,7 @@ void World::load(const filesystem::path &filename, const GLfloat (&worldColour)[
     auto &surface = m_Surfaces.back();
 
     // Open file for binary IO
-    std::ifstream input(filename.str(), std::ios::binary);
+    std::ifstream input(filename.native(), std::ios::binary);
     input.exceptions(std::ios::badbit | std::ios::failbit);
 
     // Seek to end of file, get size and rewind
@@ -242,7 +245,7 @@ void World::load(const filesystem::path &filename, const GLfloat (&worldColour)[
     surface.unbind();
 }
 //----------------------------------------------------------------------------
-void World::loadObj(const filesystem::path &filename, float scale,
+void World::loadObj(const std::filesystem::path &filename, float scale,
                     int maxTextureSize, GLint textureFormat, bool clear)
 {
     LOGI << "Loading " << filename << "...";
@@ -281,12 +284,12 @@ void World::loadObj(const filesystem::path &filename, float scale,
         std::vector<GLfloat> rawTexCoords;
 
         // Open obj file
-        std::ifstream objFile(filename.str());
-        BOB_ASSERT(!objFile.fail());
+        std::ifstream objFile(filename.native());
+        assert(!objFile.fail());
         objFile.exceptions(std::ios::badbit);
 
         // Get base path to load materials etc relative to
-        const auto basePath = filename.make_absolute().parent_path();
+        const auto basePath = std::filesystem::absolute(filename).parent_path();
 
         // Read lines into strings
         std::string lineString;
@@ -328,7 +331,7 @@ void World::loadObj(const filesystem::path &filename, float scale,
             else if(commandString == "vt") {
                 // Read texture coordinate and check there's no unhandled components following it
                 readVector<2>(lineStream, rawTexCoords, 1.0f);
-                BOB_ASSERT(lineStream.eof());
+                assert(lineStream.eof());
             }
             else if(commandString == "vn") {
                 // ignore vertex normals for now
@@ -364,7 +367,7 @@ void World::loadObj(const filesystem::path &filename, float scale,
 
         // If there are ANY raw colours, assert that there are the same number as there are positions
         if(!rawColours.empty()) {
-            BOB_ASSERT(rawColours.size() == rawPositions.size());
+            assert(rawColours.size() == rawPositions.size());
         }
 
         // Initialise bounds to limits of underlying data types
@@ -440,13 +443,13 @@ void World::render() const
     }
 }
 //----------------------------------------------------------------------------
-void World::loadMaterials(const filesystem::path &basePath, const std::string &filename,
+void World::loadMaterials(const std::filesystem::path &basePath, const std::string &filename,
                           GLint textureFormat, int maxTextureSize,
                           std::map<std::string, std::tuple<Texture*, Surface::Colour>> &materialNames)
 {
     // Open obj file
-    std::ifstream mtlFile((basePath / filename).str());
-    BOB_ASSERT(!mtlFile.fail());
+    std::ifstream mtlFile((basePath / filename).native());
+    assert(!mtlFile.fail());
     mtlFile.exceptions(std::ios::badbit);
 
     LOG_DEBUG << "Reading material file: " << filename;
@@ -498,15 +501,15 @@ void World::loadMaterials(const filesystem::path &basePath, const std::string &f
         }
         // Otherwise, if command specifies a diffuse map
         else if(commandString == "map_Kd") {
-            BOB_ASSERT(!currentMaterialName.empty());
+            assert(!currentMaterialName.empty());
 
 
-            std::string textureFilename = readName(lineStream);
+            std::filesystem::path textureFilename = readName(lineStream);
 
             LOG_DEBUG << "\t\tTexture: '" << textureFilename << "'";
 
             // Load texture and add to map
-            const std::string texturePath = (basePath / textureFilename).str();
+            const std::string texturePath = (basePath / textureFilename).u8string();
 
             // Load texture
             // **NOTE** using OpenCV so as to reduce need for extra dependencies
@@ -553,7 +556,7 @@ void World::loadMaterials(const filesystem::path &basePath, const std::string &f
                 // Otherwise
                 else {
                     // Ensure texture isn't already set for this material
-                    BOB_ASSERT(std::get<0>(mtl->second) == nullptr);
+                    assert(std::get<0>(mtl->second) == nullptr);
 
                     // Set texture in material
                     std::get<0>(mtl->second) = m_Textures.back().get();

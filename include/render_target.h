@@ -3,12 +3,15 @@
 // OpenGL includes
 #include <GL/glew.h>
 
+// Antworld includes
+#include "export.h"
+
 //----------------------------------------------------------------------------
 // BoBRobotics::AntWorld::RenderTarget
 //----------------------------------------------------------------------------
 namespace AntWorld
 {
-class RenderTarget
+class ANTWORLD_EXPORT RenderTarget
 {
 public:
     RenderTarget(GLsizei width, GLsizei height);
