@@ -112,10 +112,8 @@ std::string readName(std::istringstream &lineStream)
 }
 
 //----------------------------------------------------------------------------
-// BoBRobotics::AntWorld::World
+// AntWorld::World
 //----------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 void World::load(const filesystem::path &filename, const GLfloat (&worldColour)[3],
@@ -570,4 +568,3 @@ void World::loadMaterials(const filesystem::path &basePath, const std::string &f
     }
 }
 }   // namespace AntWorld
-}   // namespace BoBRobotics

@@ -8,10 +8,8 @@
 #include "third_party/units.h"
 
 // Lib antworld includes
-#include "antworld/surface.h"
+#include "surface.h"
 
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 class Render;
@@ -67,4 +65,3 @@ public:
     RenderMeshCubeMap();
 };
 }   // namespace AntWorld
-}   // namespace BoBRobotics

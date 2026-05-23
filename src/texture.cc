@@ -4,10 +4,8 @@
 #include <opencv2/opencv.hpp>
 
 //----------------------------------------------------------------------------
-// BoBRobotics::AntWorlds::Texture
+// AntWorlds::Texture
 //----------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 Texture::Texture()
@@ -48,4 +46,3 @@ void Texture::upload(const cv::Mat &texture, GLint textureFormat)
     glGenerateMipmap(GL_TEXTURE_2D);
 }
 }   // namespace AntWorld
-}   // namespace BoBRobotics

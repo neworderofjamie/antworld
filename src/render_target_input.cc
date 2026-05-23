@@ -3,10 +3,8 @@
 #include "render_target_input.h"
 
 //----------------------------------------------------------------------------
-// BoBRobotics::AntWorld::RenderTargetInput
+// AntWorld::RenderTargetInput
 //----------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 cv::Size RenderTargetInput::getOutputSize() const
@@ -34,4 +32,3 @@ bool RenderTargetInput::readFrame(cv::Mat &outFrame)
     return true;
 }
 }   // namespace AntWorld
-}   // namespace BoBRobotics

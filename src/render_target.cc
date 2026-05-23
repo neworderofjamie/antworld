@@ -7,8 +7,6 @@
 //----------------------------------------------------------------------------
 // BoBRobotics::AntWorld::RenderTarget
 //----------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 RenderTarget::RenderTarget(GLsizei width, GLsizei height)
@@ -77,4 +75,3 @@ void RenderTarget::clear()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 }   // namespace AntWorld
-}   // namespace BoBRobotics

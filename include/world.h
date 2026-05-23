@@ -28,8 +28,7 @@ namespace filesystem
     class path;
 }
 
-namespace BoBRobotics
-{
+
 using namespace units::literals;
 
 namespace AntWorld

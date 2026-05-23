@@ -8,7 +8,6 @@
 //----------------------------------------------------------------------------
 #define BUFFER_OFFSET(i) ((void*)(i))
 
-namespace BoBRobotics {
 namespace AntWorld {
 
 //! Get the distance between two 2D points
@@ -25,4 +24,3 @@ units::length::meter_t distance(const T &v1, units::length::meter_t x2, units::l
     return units::math::hypot(y2 - units::length::meter_t(v1[1]), x2 - units::length::meter_t(v1[0]));
 }
 }    // AntWorld
-}    // BoBRobotics

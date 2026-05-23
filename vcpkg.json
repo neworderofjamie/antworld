@@ -1,0 +1,3 @@
+{
+	"dependencies": [ "opencv", "sfml", "units", "plog" ]
+}

@@ -6,8 +6,6 @@
 //----------------------------------------------------------------------------
 // BoBRobotics::AntWorld::RenderTarget
 //----------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 class RenderTarget
@@ -40,4 +38,3 @@ private:
     GLuint m_DepthBuffer;
 };
 }   // namespace AntWorld
-}   // namespace BoBRobotics

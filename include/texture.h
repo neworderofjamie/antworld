@@ -12,8 +12,6 @@ namespace cv
 //------------------------------------------------------------------------
 // BoBRobotics::AntWorld::Texture
 //------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 class Texture
@@ -36,4 +34,3 @@ private:
     GLuint m_Texture;
 };
 }   // namespace AntWorld
-}   // namespace BoBRobotics

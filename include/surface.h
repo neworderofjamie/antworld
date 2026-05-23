@@ -12,20 +12,15 @@
 #include "antworld/opengl_type_traits.h"
 
 // Forward declarations
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 class Texture;
-}
 }
 
 //------------------------------------------------------------------------
 // Surface
 //------------------------------------------------------------------------
 // Encapsulates a single 'surface' - geometry to be rendered in one draw call using one material
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 class Surface
@@ -155,4 +150,3 @@ private:
     Colour m_Colour;
 };
 }   // namespace AntWorld
-}   // namespace BoBRobotics

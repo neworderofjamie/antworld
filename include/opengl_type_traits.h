@@ -6,8 +6,6 @@
 //----------------------------------------------------------------------------
 // BoBRobotics::AntWorld::OpenGLTypeTraits
 //----------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 template<typename T>
@@ -35,4 +33,3 @@ struct OpenGLTypeTraits<GLbyte>
 };
 
 }   // namespace AntWorld
-}   // namespace BoBRobotics

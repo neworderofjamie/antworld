@@ -19,26 +19,26 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="camera.cc" />
-    <ClCompile Include="renderer.cc" />
-    <ClCompile Include="render_mesh.cc" />
-    <ClCompile Include="render_target.cc" />
-    <ClCompile Include="render_target_input.cc" />
-    <ClCompile Include="surface.cc" />
-    <ClCompile Include="texture.cc" />
-    <ClCompile Include="world.cc" />
+    <ClCompile Include="src\camera.cc" />
+    <ClCompile Include="src\renderer.cc" />
+    <ClCompile Include="src\render_mesh.cc" />
+    <ClCompile Include="src\render_target.cc" />
+    <ClCompile Include="src\render_target_input.cc" />
+    <ClCompile Include="src\surface.cc" />
+    <ClCompile Include="src\texture.cc" />
+    <ClCompile Include="src\world.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\camera.h" />
-    <ClInclude Include="..\include\common.h" />
-    <ClInclude Include="..\include\opengl_type_traits.h" />
-    <ClInclude Include="..\include\renderer.h" />
-    <ClInclude Include="..\include\render_mesh.h" />
-    <ClInclude Include="..\include\render_target.h" />
-    <ClInclude Include="..\include\render_target_input.h" />
-    <ClInclude Include="..\include\surface.h" />
-    <ClInclude Include="..\include\texture.h" />
-    <ClInclude Include="..\include\world.h" />
+    <ClInclude Include="include\camera.h" />
+    <ClInclude Include="include\common.h" />
+    <ClInclude Include="include\opengl_type_traits.h" />
+    <ClInclude Include="include\renderer.h" />
+    <ClInclude Include="include\render_mesh.h" />
+    <ClInclude Include="include\render_target.h" />
+    <ClInclude Include="include\render_target_input.h" />
+    <ClInclude Include="include\surface.h" />
+    <ClInclude Include="include\texture.h" />
+    <ClInclude Include="include\world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -74,6 +74,9 @@
     <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -87,14 +90,13 @@
       <ConformanceMode>true</ConformanceMode>
       <DisableSpecificWarnings Condition=" $(Configuration.Contains('DLL')) ">4251</DisableSpecificWarnings>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)genn/include/genn/third_party;$(SolutionDir)genn/include/genn/genn;$(SolutionDir)genn/include/genn/third_party/libffi;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation Condition=" $(Configuration.Contains('Release')) ">true</GenerateDebugInformation>
       <EnableCOMDATFolding Condition=" $(Configuration.Contains('Release')) ">true</EnableCOMDATFolding>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assembler_$(Configuration).lib;genn_$(Configuration).lib;libffi_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories Condition=" !$(Configuration.Contains('DLL')) ">$(OutDir);$(SolutionDir)genn/lib</AdditionalLibraryDirectories>
       <AdditionalLibraryDirectories Condition=" $(Configuration.Contains('DLL')) ">$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>

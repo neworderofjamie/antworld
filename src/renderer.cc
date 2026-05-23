@@ -6,10 +6,8 @@
 #include <stdexcept>
 
 //------------------------------------------------------------------------
-// BoBRobotics::AntWorld::Renderer
+// AntWorld::Renderer
 //------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 // **NOTE** RenderMesh initialisation matches the matlab:
@@ -374,4 +372,3 @@ void Renderer::applyFrame(meter_t x, meter_t y, meter_t z,
 }
 
 }   // namespace AntWorld
-}   // namespace BoBRobotics

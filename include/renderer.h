@@ -16,8 +16,6 @@
 // Third-party includes
 #include "third_party/units.h"
 
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 class RenderTarget;
@@ -104,4 +102,3 @@ private:
     const double m_FarClip;
 };
 }   // namespace AntWorld
-}   // namespace BoBRobotics

@@ -13,8 +13,6 @@
 // BoBRobotics::AntWorld::RenderTargetInput
 //----------------------------------------------------------------------------
 //! Read a video stream from a libantworld RenderTarget
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 class RenderTarget;

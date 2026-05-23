@@ -2,10 +2,8 @@
 #include "texture.h"
 
 //----------------------------------------------------------------------------
-// BoBRobotics::AntWorlds::Surfaces
+// AntWorlds::Surfaces
 //----------------------------------------------------------------------------
-namespace BoBRobotics
-{
 namespace AntWorld
 {
 //----------------------------------------------------------------------------
@@ -100,4 +98,3 @@ void Surface::render(GLenum primitive, GLenum indexType) const
 }
 
 }   // namespace AntWorld
-}   // namespace BoBRobotics
