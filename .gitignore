@@ -1,6 +1,7 @@
 **/x64/
 *.vcxproj.user
 *.d
+/**/.vs
 *.exe
 *.pdb
 /**/__pycache__/

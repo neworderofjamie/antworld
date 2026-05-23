@@ -19,28 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="compiler.cc" />
-    <ClCompile Include="process.cc" />
-    <ClCompile Include="shape.cc" />
+    <ClCompile Include="camera.cc" />
+    <ClCompile Include="renderer.cc" />
+    <ClCompile Include="render_mesh.cc" />
+    <ClCompile Include="render_target.cc" />
+    <ClCompile Include="render_target_input.cc" />
+    <ClCompile Include="surface.cc" />
+    <ClCompile Include="texture.cc" />
+    <ClCompile Include="world.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\compiler\compiler_export.h" />
-    <ClInclude Include="..\..\include\compiler\event_container.h" />
-    <ClInclude Include="..\..\include\compiler\model_component.h" />
-    <ClInclude Include="..\..\include\compiler\process_group.h" />
-    <ClInclude Include="..\..\include\compiler\shape.h" />
-    <ClInclude Include="..\..\include\compiler\variable.h" />
-    <ClInclude Include="..\..\include\compiler\compiler.h" />
-    <ClInclude Include="..\..\include\compiler\parameter.h" />
-    <ClInclude Include="..\..\include\compiler\process.h" />
+    <ClInclude Include="..\include\camera.h" />
+    <ClInclude Include="..\include\common.h" />
+    <ClInclude Include="..\include\opengl_type_traits.h" />
+    <ClInclude Include="..\include\renderer.h" />
+    <ClInclude Include="..\include\render_mesh.h" />
+    <ClInclude Include="..\include\render_target.h" />
+    <ClInclude Include="..\include\render_target_input.h" />
+    <ClInclude Include="..\include\surface.h" />
+    <ClInclude Include="..\include\texture.h" />
+    <ClInclude Include="..\include\world.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{93B2AE21-58E7-4E43-A5B8-63D33E59A242}</ProjectGuid>
+    <ProjectGuid>{93118AAF-7167-4FEF-9115-6234BAC71409}</ProjectGuid>
     <RootNamespace>riscvise</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>compiler</ProjectName>
+    <ProjectName>antworld</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration">
