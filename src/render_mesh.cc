@@ -8,6 +8,11 @@
 // Standard C includes
 #include <cassert>
 
+// OpenGL includes
+#include <GL/glew.h>
+#include <GL/glu.h>
+
+
 using namespace units::angle;
 using namespace units::math; // cmath functions for unit types
 

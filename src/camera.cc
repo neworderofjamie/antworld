@@ -1,8 +1,11 @@
 // BoB robotics includes
-#include "antworld/camera.h"
+#include "camera.h"
 
 // Standard C++ includes
 #include <iostream>
+
+// OpenCV includes
+#include <opencv2/opencv.hpp>
 
 namespace
 {

@@ -23,7 +23,6 @@
     <ClCompile Include="src\renderer.cc" />
     <ClCompile Include="src\render_mesh.cc" />
     <ClCompile Include="src\render_target.cc" />
-    <ClCompile Include="src\render_target_input.cc" />
     <ClCompile Include="src\surface.cc" />
     <ClCompile Include="src\texture.cc" />
     <ClCompile Include="src\world.cc" />
@@ -35,7 +34,6 @@
     <ClInclude Include="include\renderer.h" />
     <ClInclude Include="include\render_mesh.h" />
     <ClInclude Include="include\render_target.h" />
-    <ClInclude Include="include\render_target_input.h" />
     <ClInclude Include="include\surface.h" />
     <ClInclude Include="include\texture.h" />
     <ClInclude Include="include\world.h" />

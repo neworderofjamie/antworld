@@ -1,3 +1,6 @@
 {
-	"dependencies": [ "opencv", "sfml", "units", "plog" ]
+	"dependencies": [ "opencv4", "sfml", "units", "plog", "glew" ],
+	"overrides": [
+		{ "name": "units", "version": "2.3.4" }
+	]
 }

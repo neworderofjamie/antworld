@@ -12,6 +12,8 @@
 #include <stdexcept>
 #include <tuple>
 
+using namespace units::literals;
+
 //----------------------------------------------------------------------------
 // Anonymous namespace
 //----------------------------------------------------------------------------
@@ -84,7 +86,7 @@ void readFace(std::istringstream &lineStream,
     }
 
     // Check this is the end of the linestream i.e. there aren't extra components
-    BOB_ASSERT(lineStream.eof());
+    assert(lineStream.eof());
 }
 //----------------------------------------------------------------------------
 void stripWindowsLineEnding(std::string &lineString)
@@ -116,6 +118,10 @@ std::string readName(std::istringstream &lineStream)
 //----------------------------------------------------------------------------
 namespace AntWorld
 {
+World::World() : m_MinBound{0_m, 0_m, 0_m}, m_MaxBound{0_m, 0_m, 0_m}
+{
+}
+//----------------------------------------------------------------------------
 void World::load(const filesystem::path &filename, const GLfloat (&worldColour)[3],
                  const GLfloat (&groundColour)[3], bool clear)
 {

@@ -9,10 +9,16 @@
 // Standard C++ includes
 #include <memory>
 
+namespace cv
+{
+class Size;
+}
+
 namespace AntWorld {
 class Camera
 {
-protected:
+    using degree_t = units::angle::degree_t;
+    using meter_t = units::length::meter_t;
 
 public:
     Camera(sf::Window &window,
@@ -26,7 +32,7 @@ public:
     void setAttitude(degree_t yaw, degree_t pitch, degree_t roll);
 
     // Virtuals
-    bool readFrame(cv::Mat &outFrame) override;
+    bool readFrame(cv::Mat &outFrame);
 
     static std::unique_ptr<sf::Window> initialiseWindow(const cv::Size &size);
 

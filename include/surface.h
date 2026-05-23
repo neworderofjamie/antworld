@@ -8,8 +8,8 @@
 #include <GL/glew.h>
 
 // Libantworld includes
-#include "antworld/common.h"
-#include "antworld/opengl_type_traits.h"
+#include "common.h"
+#include "opengl_type_traits.h"
 
 // Forward declarations
 namespace AntWorld

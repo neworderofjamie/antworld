@@ -1,11 +1,7 @@
 #pragma once
 
-// OpenGL includes
-#include <GL/glew.h>
-#include <GL/glu.h>
-
 // Third-party includes
-#include "third_party/units.h"
+#include <units.h>
 
 // Lib antworld includes
 #include "surface.h"

@@ -9,12 +9,12 @@
 // OpenGL includes
 #include <GL/glew.h>
 
+// Units includes
+#include <units.h>
+
 // Antworld includes
 #include "render_mesh.h"
 #include "world.h"
-
-// Third-party includes
-#include "third_party/units.h"
 
 namespace AntWorld
 {

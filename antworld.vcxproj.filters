@@ -11,60 +11,54 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="render_target.cc">
+    <ClCompile Include="src\camera.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="render_target_input.cc">
+    <ClCompile Include="src\renderer.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderer.cc">
+    <ClCompile Include="src\render_mesh.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="surface.cc">
+    <ClCompile Include="src\render_target.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="texture.cc">
+    <ClCompile Include="src\surface.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="world.cc">
+    <ClCompile Include="src\texture.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="render_mesh.cc">
+    <ClCompile Include="src\world.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\include\render_target_input.h">
+    <ClInclude Include="include\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\renderer.h">
+    <ClInclude Include="include\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\surface.h">
+    <ClInclude Include="include\opengl_type_traits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\texture.h">
+    <ClInclude Include="include\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\world.h">
+    <ClInclude Include="include\render_mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\camera.h">
+    <ClInclude Include="include\render_target.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\common.h">
+    <ClInclude Include="include\surface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\opengl_type_traits.h">
+    <ClInclude Include="include\texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\render_mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\render_target.h">
+    <ClInclude Include="include\world.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

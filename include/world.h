@@ -8,10 +8,6 @@
 
 // OpenGL includes
 #include <GL/glew.h>
-#include <GL/glu.h>
-
-// BoB robotics includes
-#include "common/pose.h"
 
 // Libantworld include
 #include "surface.h"
@@ -28,22 +24,18 @@ namespace filesystem
     class path;
 }
 
-
-using namespace units::literals;
-
-namespace AntWorld
-{
 //----------------------------------------------------------------------------
-// BoBRobotics::AntWorld::World
+// AntWorld::World
 //----------------------------------------------------------------------------
 //! Provides a means for loading a world stored on disk into OpenGL
+namespace AntWorld
+{
 class World
 {
     using meter_t = units::length::meter_t;
 
 public:
-    World() : m_MinBound{0_m, 0_m, 0_m}, m_MaxBound{0_m, 0_m, 0_m}
-    {}
+    World();
 
     //------------------------------------------------------------------------
     // Public API
@@ -55,18 +47,18 @@ public:
                  int maxTextureSize = -1, GLint textureFormat = GL_RGB, 
                  bool clear = true);
 
-    const Vector3<meter_t> &getMinBound()
+    const auto &getMinBound()
     {
         return m_MinBound;
     }
 
-    const Vector3<meter_t> &getMaxBound()
+    const auto &getMaxBound()
     {
         return m_MaxBound;
     }
 
-    void setMinBound(const Vector3<meter_t> &minBound){ m_MinBound = minBound; }
-    void setMaxBound(const Vector3<meter_t> &maxBound){ m_MaxBound = maxBound; }
+    void setMinBound(const std::array<meter_t, 3> &minBound){ m_MinBound = minBound; }
+    void setMaxBound(const std::array<meter_t, 3> &maxBound){ m_MaxBound = maxBound; }
 
 private:
     //------------------------------------------------------------------------
@@ -86,8 +78,7 @@ private:
     std::vector<std::unique_ptr<Texture>> m_Textures;
 
     // World bounds
-    Vector3<meter_t> m_MinBound;
-    Vector3<meter_t> m_MaxBound;
+    std::array<meter_t, 3> m_MinBound;
+    std::array<meter_t, 3> m_MaxBound;
 };
 }   // namespace AntWorld
-}   // namespace BoBRobotics
