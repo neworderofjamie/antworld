@@ -132,13 +132,13 @@ with open(os.path.join(abs_fenn_path, "version.txt")) as version_file:
     version = version_file.read().strip()
 
 setup(
-    name="antworld",
+    name="pyantworld",
     version=version,
     packages = find_packages(),
-    package_data={"antworld": package_data},
+    package_data={"pyantworld": package_data},
 
     url="https://github.com/neworderofjamie/antworld/",
-    ext_package="antworld",
+    ext_package="pyantworld",
     ext_modules=ext_modules,
     zip_safe=False,
     python_requires=">=3.8",
