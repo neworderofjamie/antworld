@@ -1,10 +1,12 @@
 // Standard C++ includes
+#include <array>
 #include <filesystem>
 #include <optional>
 #include <sstream>
 
 // PyBind11 includes
 #include <pybind11/functional.h>
+#include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
@@ -14,6 +16,9 @@
 #include <plog/Appenders/ConsoleAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
 
+// OpenGL
+#include <GL/glew.h>
+
 // Units
 #include <units.h>
 
@@ -21,9 +26,10 @@
 #include "camera.h"
 #include "renderer.h"
 #include "world.h"
-w
-using namespace pybind11::literals;
 
+using namespace pybind11::literals;
+using degree_t = units::angle::degree_t;
+using meter_t = units::length::meter_t;
 
 //----------------------------------------------------------------------------
 // Anonymous namespace
@@ -35,11 +41,11 @@ void initLogging(plog::Severity level)
     plog::init<plog::TxtFormatter>(level, plog::streamStdOut); 
 }
 
-void setFog(const std::string &mode, std::array<GLFloat, 3> colour, 
+void setFog(const std::string &mode, const std::array<GLfloat, 4> &colour, 
 			GLfloat start, GLfloat end, GLfloat density)
 {    
 	// Set fog colour
-	glFogfv (GL_FOG_COLOR, colour.data());
+	glFogfv(GL_FOG_COLOR, colour.data());
     
     // Set fog start, end and density
     glFogf(GL_FOG_START, start);
@@ -71,9 +77,9 @@ void setFog(const std::string &mode, std::array<GLFloat, 3> colour,
     }
 }
 
-void setClearColour(GLfloat r, GLfloat g, GLfloat b) 
+void setClearColour(const std::array<GLfloat, 4> &colour) 
 {
-    glClearColor(r, g, b, a);
+    glClearColor(colour.data());
 }
 
 
@@ -85,7 +91,7 @@ public:
              double horizontalFOV, double verticalFOV)
 	:	m_Window{AntWorld::Camera::initialiseWindow(renderSize)},
         m_Renderer(AntWorld::Renderer::sphericalRenderMesh, cubemapSize, nearClip, farClip, 
-				degree_t{horizontalFOV}, degree_t{verticalFOV}),
+                   degree_t{horizontalFOV}, degree_t{verticalFOV}),
         m_Camera(*m_Window, m_Renderer, renderSize)
     {}
 
@@ -93,7 +99,7 @@ public:
              double nearClip, double farClip)
     :	m_Window{AntWorld::Camera::initialiseWindow(renderSize)},
 		m_Renderer(AntWorld::Renderer::cubeMapRenderMesh, cubemapSize, nearClip, farClip),
-        m_Camera(*window, m_Renderer, renderSize)
+        m_Camera(*m_Window, m_Renderer, renderSize)
     {}
 	
 	void display()
@@ -107,11 +113,11 @@ public:
 		const auto ext = std::filesystem::path(filename).extension();
 		if (ext == "bin") {
             // Load with default world and ground colours
-            world.load(filepath,  { 0.0f, 1.0f, 0.0f },
+            world.load(filename, { 0.0f, 1.0f, 0.0f },
                        { 0.898f, 0.718f, 0.353f }, clear);
 		} 
 		else if (ext == "obj") {
-			world.loadObj(filepath, 1.0f, -1, GL_RGB, clear);
+			world.loadObj(filename, 1.0f, -1, GL_RGB, clear);
 		} 
 		else {
 			throw std::runtime_error{ "Unknown file type" };
@@ -121,75 +127,33 @@ public:
 		const auto &worldMin = world.getMaxBound();
 		const auto &worldMax = world.getMinBound();
 		return {
-            {worldMin.x().value(), worldMax.x().value()},
-            {worldMin.y().value(), worldMax.y().value()},
-            {worldMin.z().value(), worldMax.z().value()}};
+            std::array<double, 2>{worldMin[0].value(), worldMax[0].value()},
+            std::array<double, 2>{worldMin[1].value(), worldMax[1].value()},
+            std::array<double, 2>{worldMin[2].value(), worldMax[2].value()}};
 	}
-
-	/*Agent_read_frame(AgentObject *self, PyObject *)
-	{
-		const auto size = self->members->agent.getOutputSize();
-
-		// Allocate new numpy array
-		npy_intp dims[3] = { size.height, size.width, 3 };
-		auto array = PyArray_SimpleNew(3, dims, NPY_UINT8);
-		if (!array)
-			return nullptr;
-
-		try {
-			// A cv::Mat wrapper for the allocated data
-			auto data = PyArray_DATA(reinterpret_cast<PyArrayObject *>(array));
-			cv::Mat frame{ size.height, size.width, CV_8UC3, data };
-			self->members->agent.readFrameSync(frame);
-			BOB_ASSERT(frame.type() == CV_8UC3);
-		} catch (std::exception &e) {
-			Py_DECREF(array);
-			PyErr_SetString(PyExc_RuntimeError, e.what());
-			return nullptr;
-		}
-
-		// array is now populated with image data
-		return array;
-	}
-
-	DLL_EXPORT PyObject *
-	Agent_read_frame_greyscale(AgentObject *self, PyObject *)
-	{
-		const auto size = self->members->agent.getOutputSize();
-
-		// Allocate new numpy array
-		npy_intp dims[2] = { size.height, size.width };
-		auto array = PyArray_SimpleNew(2, dims, NPY_UINT8);
-		if (!array)
-			return nullptr;
-
-		try {
-			// A cv::Mat wrapper for the allocated data
-			auto data = PyArray_DATA(reinterpret_cast<PyArrayObject *>(array));
-			cv::Mat frame{ size.height, size.width, CV_8UC1, data };
-			self->members->agent.readGreyscaleFrameSync(frame);
-			BOB_ASSERT(frame.type() == CV_8UC1);
-		} catch (std::exception &e) {
-			Py_DECREF(array);
-			PyErr_SetString(PyExc_RuntimeError, e.what());
-			return nullptr;
-		}
-
-		// array is now populated with image data
-		return array;
-	}*/
-
+    
+    pybind11::array_t<uint8_t> readFrame()
+    {
+        const auto &renderSize = m_Camera.getRenderSize();
+        const size_t shape[3]{renderSize.height, renderSize.width, 3};
+        const size_t strides[3]{renderSize.width * 3, 3, 1};
+        
+        pybind11::array_t<uint8_t> array(shape, strides);
+        
+        cv::Mat frame{renderSize.height, renderSize.width, CV_8UC3, array.mutable_data()};
+        m_Camera.readFrame(frame);
+        assert(frame.type() == CV_8UC3);
+        
+        return array;
+    }
+   
 	void setPosition(const std::array<double, 3> &position)
 	{
-        using namespace units::distance;
-        
 		m_Camera.setPosition(meter_t{position[0]}, meter_t{position[1]}, meter_t{position[2]});
 	}
 
 	void setAttitude(const std::array<double, 3> &position)
 	{
-		using namespace units::angle;
-
 		m_Camera.setAttitude(degree_t{position[0]}, degree_t{position[1]}, degree_t{position[2]});
 	}
 private:
@@ -222,11 +186,11 @@ PYBIND11_MODULE(_antworld, m)
     //------------------------------------------------------------------------
     m.def("init_logging", &initLogging, pybind11::arg("level") = plog::Severity::info);
 	
-	m.def("set_clear_colour", &setClearColour, pybind11::arg("r") = 0.75,
-		  pybind11::arg("g") = 0.75, pybind11::arg("b") = 0.75);
+	m.def("set_clear_colour", &setClearColour, 
+          pybind11::arg("colour") = std::array<GLfloat, 4>{0.75, 0.75, 0.75, 1.0})
 	
 	m.def("set_fog", &setFog, pybind11::arg("mode"), 
-		  pybind11::arg("colour") = {0.75f, 0.75f, 0.75f, 1.0f},
+		  pybind11::arg("colour") = std::array<GLfloat, 4>{0.75f, 0.75f, 0.75f, 1.0f},
 		  pybind11::arg("start") = 0.0f, pybind11::arg("end") = 0.0f,
 		  pybind11::arg("density") = 1.0f);
   
@@ -234,8 +198,8 @@ PYBIND11_MODULE(_antworld, m)
     // fenn.Shape
     //------------------------------------------------------------------------
     pybind11::class_<AntAgent>(m, "AntAgent")
-         .def(pybind11::init<const std::vector<size_t>&>())
-         .def(pybind11::init<size_t>())
+         //.def(pybind11::init<const std::vector<size_t>&>())
+         //.def(pybind11::init<size_t>())
 
          .def("display", &AntAgent::display)
          .def("load_world", &AntAgent::loadWorld, pybind11::arg("filename"),

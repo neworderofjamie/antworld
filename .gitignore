@@ -2,7 +2,9 @@ x64
 .vs
 vcpkg_installed
 *.vcxproj.user
+*.egg-info
 *.d
 *.exe
 *.pdb
+*.dll
 /**/__pycache__/

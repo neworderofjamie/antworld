@@ -39,13 +39,12 @@ else:
         lib_suffix = "_dynamic_debug"
     else:
         lib_suffix = "_dynamic"
+        
+abs_antworld_path = os.path.dirname(os.path.abspath(__file__))
 
-abs_fenn_path = os.path.dirname(os.path.abspath(__file__))
-fenn_path = os.path.dirname(os.path.abspath(__file__))
-
-antworld_path = os.path.join(".", "antworld")
-antworld_src = os.path.join(antworld_path, "src")
-antworld_include = os.path.join(antworld_path, "include")
+pyantworld_path = os.path.join(".", "pyantworld")
+pyantworld_src = os.path.join(pyantworld_path, "src")
+antworld_include = os.path.join(".", "include")
 
 # Always package LibGeNN
 if WIN:
@@ -56,8 +55,8 @@ else:
 # Define standard kwargs for building all extensions
 antworld_extension_kwargs = {
     "include_dirs": [antworld_include],
-    "library_dirs": [antworld_path],
-    "libraries": [f"genn{lib_suffix}"],
+    "library_dirs": [pyantworld_path],
+    "libraries": [f"antworld{lib_suffix}"],
     "cxx_std": 17,
     "extra_compile_args": [],
     "extra_link_args": [],
@@ -65,59 +64,58 @@ antworld_extension_kwargs = {
 
 # If this is Windows
 if WIN:
+    # Add vcpkg include directory
+    vcpkg_include = os.path.join(".", "vcpkg_installed", "x64-windows", 
+                                 "x64-windows", "include")
+    antworld_extension_kwargs["include_dirs"].extend((vcpkg_include, 
+                                                      os.path.join(vcpkg_include, "opencv4")))
+
     # Turn off warnings about dll-interface being required for stuff to be
     # used by clients and prevent windows.h exporting TOO many awful macros
     antworld_extension_kwargs["extra_compile_args"].extend(["/wd4251", "/wd4275", "-DWIN32_LEAN_AND_MEAN", "-DNOMINMAX"])
 
     # Add antworld library to dependencies
-    fenn_extension_kwargs["depends"] = [os.path.join(antworld_path, "antworld" + lib_suffix + ".dll")]
-    # Add FeNN libraries to extension
-    fenn_extension_kwargs["depends"].extend(
-        os.path.join(pyfenn_path, f"{l}{lib_suffix}.dll") 
-        for l in fenn_libraries)
+    antworld_extension_kwargs["depends"] = [os.path.join(pyantworld_path, "antworld" + lib_suffix + ".dll")]
+
 # Otherwise
 else:
-    # Add whatever configuration libffi requires
-    ffi_config = pkgconfig.parse("libffi")
-    for k, v in ffi_config.items():
-        fenn_extension_kwargs[k].extend(v)
+    # Loop through pacakges
+    for pkg in ["opencv4", "sfml", "units", "plog", "glew"]:
+        # Add whatever configuration libffi requires
+        ffi_config = pkgconfig.parse(pkg)
+        for k, v in ffi_config.items():
+            antworld_extension_kwargs[k].extend(v)
 
-    # Add GeNN library to dependencies
-    fenn_extension_kwargs["depends"] = [os.path.join(pyfenn_path, "libgenn" + lib_suffix + ".so"),
-                                        os.path.join(pyfenn_path, "docStrings.h")]
+    # Add antworld library to dependencies
+    antworld_extension_kwargs["depends"] = [os.path.join(pyantworld_path, "antworld" + lib_suffix + ".so")]
     
-    # Add FeNN libraries to extension
-    fenn_extension_kwargs["depends"].extend(
-        os.path.join(pyfenn_path, f"lib{l}{lib_suffix}.so") 
-        for l in fenn_libraries)
-
-    # If this is Linux, we want to add extension directory i.e. $ORIGIN to runtime
-    # directories so libGeNN and backends can be found wherever package is installed
+    # If this is Linux, we want to add extension directory i.e. $ORIGIN to 
+    # runtime directories so librariescan be found wherever package is installed
     if LINUX:
-        fenn_extension_kwargs["runtime_library_dirs"] = ["$ORIGIN"]
+        antworld_extension_kwargs["runtime_library_dirs"] = ["$ORIGIN"]
 
 ext_modules = [
-    Pybind11Extension("_fenn",
-                      [os.path.join(pyfenn_src, "fenn.cc")],
-                      **fenn_extension_kwargs)]
+    Pybind11Extension("_antworld",
+                      [os.path.join(pyantworld_src, "antworld.cc")],
+                      **antworld_extension_kwargs)]
 
 # If we should build required FeNN libraries
 if build_antworld_libs:
     # If compiler is MSVC
     if WIN:
         # **NOTE** ensure pygenn_path has trailing slash to make MSVC happy
-        out_dir = os.path.join(abs_fenn_path, "pyfenn", "")
+        out_dir = os.path.join(abs_antworld_path, "pyantworld", "")
 
         # Build all dependencies for FeNN backend
-        check_call(["msbuild", "riscv_ise.sln", f"/t:backend",
+        check_call(["msbuild", "antworld.sln", f"/t:antworld",
                     f"/p:Configuration={lib_suffix[1:]}",
                     "/m", "/verbosity:quiet",
                     f"/p:OutDir={out_dir}"],
-                    cwd=abs_fenn_path)
+                    cwd=abs_antworld_path)
     else:
         # Define make arguments
         make_arguments = ["make", "backend", "DYNAMIC=1",
-                          f"LIBRARY_DIRECTORY={os.path.join(abs_fenn_path, 'pyfenn')}",
+                          f"LIBRARY_DIRECTORY={os.path.join(abs_antworld_path, 'pyantworld')}",
                           f"--jobs={cpu_count(logical=False)}"]
         if debug_build:
             make_arguments.append("DEBUG=1")
@@ -126,9 +124,10 @@ if build_antworld_libs:
             make_arguments.append("COVERAGE=1")
 
         # Build
-        check_call(make_arguments, cwd=abs_fenn_path)
+        check_call(make_arguments, cwd=abs_antworld_path)
+
 # Read version from txt file
-with open(os.path.join(abs_fenn_path, "version.txt")) as version_file:
+with open(os.path.join(abs_antworld_path, "version.txt")) as version_file:
     version = version_file.read().strip()
 
 setup(

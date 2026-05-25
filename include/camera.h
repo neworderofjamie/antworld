@@ -35,9 +35,11 @@ public:
     void setAttitude(degree_t yaw, degree_t pitch, degree_t roll);
 
     bool readFrame(cv::Mat &outFrame);
+    
+    const auto &getRenderSize() const{ return m_RenderSize; }
 
     static std::unique_ptr<sf::Window> initialiseWindow(const cv::Size &size);
-
+    
 private:
     meter_t m_PoseX;
     meter_t m_PoseY;
