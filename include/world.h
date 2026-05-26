@@ -38,6 +38,8 @@ class ANTWORLD_EXPORT World
 
 public:
     World();
+    World(const World&) = delete;
+    World &operator=(const World &) = delete;
 
     //------------------------------------------------------------------------
     // Public API
