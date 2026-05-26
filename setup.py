@@ -1,7 +1,9 @@
 import os
 import pkgconfig
+import shutil
 import sys
 from copy import deepcopy
+from glob import glob
 from platform import system, uname
 from psutil import cpu_count
 from subprocess import check_call
@@ -40,8 +42,7 @@ else:
     else:
         lib_suffix = "_dynamic"
         
-abs_antworld_path = os.path.dirname(os.path.abspath(__file__))
-
+abs_antworld_path = os.path.dirname(os.path.abspath(__file__))                            
 pyantworld_path = os.path.join(".", "pyantworld")
 pyantworld_src = os.path.join(pyantworld_path, "src")
 antworld_include = os.path.join(".", "include")
@@ -64,12 +65,22 @@ antworld_extension_kwargs = {
 
 # If this is Windows
 if WIN:
+    vcpkg_base = os.path.join(".", "vcpkg_installed", "x64-windows", "x64-windows")
+    
     # Add vcpkg include directory
-    vcpkg_include = os.path.join(".", "vcpkg_installed", "x64-windows", 
-                                 "x64-windows", "include")
+    vcpkg_include = os.path.join(vcpkg_base, "include")
     antworld_extension_kwargs["include_dirs"].extend((vcpkg_include, 
                                                       os.path.join(vcpkg_include, "opencv4")))
+    
+    # Add vcpkg library directory
+    vcpkg_lib = os.path.join(vcpkg_base, *(("debug", "lib") if debug_build 
+                                           else ("lib",)))
+    antworld_extension_kwargs["library_dirs"].append(vcpkg_lib)
 
+    
+    # Link OpenGL as it's used directly in extension
+    antworld_extension_kwargs["libraries"].append("OpenGL32")
+    
     # Turn off warnings about dll-interface being required for stuff to be
     # used by clients and prevent windows.h exporting TOO many awful macros
     antworld_extension_kwargs["extra_compile_args"].extend(["/wd4251", "/wd4275", "-DWIN32_LEAN_AND_MEAN", "-DNOMINMAX"])
@@ -106,6 +117,16 @@ if build_antworld_libs:
         # **NOTE** ensure pygenn_path has trailing slash to make MSVC happy
         out_dir = os.path.join(abs_antworld_path, "pyantworld", "")
 
+        # Find VCPKG bin directory
+        abs_vcpkg_bin = os.path.join(abs_antworld_path, "vcpkg_installed", 
+                                     "x64-windows", "x64-windows",
+                                     *(("debug", "bin") if debug_build 
+                                       else ("bin",)))    
+        
+        # Copy all DLLs
+        for d in glob(os.path.join(abs_vcpkg_bin, "*.dll")):
+            shutil.copy(d, out_dir)
+        
         # Build all dependencies for FeNN backend
         check_call(["msbuild", "antworld.sln", f"/t:antworld",
                     f"/p:Configuration={lib_suffix[1:]}",
