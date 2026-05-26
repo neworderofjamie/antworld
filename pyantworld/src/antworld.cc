@@ -12,9 +12,8 @@
 
 // Plog
 #include <plog/Log.h>
-#include <plog/Severity.h>
-#include <plog/Appenders/ConsoleAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
+#include <plog/Initializers/ConsoleInitializer.h>
 
 // OpenGL
 #include <GL/glew.h>
@@ -79,7 +78,7 @@ void setFog(const std::string &mode, const std::array<GLfloat, 4> &colour,
 
 void setClearColour(const std::array<GLfloat, 4> &colour) 
 {
-    glClearColor(colour.data());
+    glClearColor(colour[0], colour[1], colour[2], colour[3]);
 }
 
 
@@ -187,7 +186,7 @@ PYBIND11_MODULE(_antworld, m)
     m.def("init_logging", &initLogging, pybind11::arg("level") = plog::Severity::info);
 	
 	m.def("set_clear_colour", &setClearColour, 
-          pybind11::arg("colour") = std::array<GLfloat, 4>{0.75, 0.75, 0.75, 1.0})
+          pybind11::arg("colour") = std::array<GLfloat, 4>{0.75, 0.75, 0.75, 1.0});
 	
 	m.def("set_fog", &setFog, pybind11::arg("mode"), 
 		  pybind11::arg("colour") = std::array<GLfloat, 4>{0.75f, 0.75f, 0.75f, 1.0f},
