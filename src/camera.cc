@@ -38,8 +38,8 @@ void handleGLError(GLenum, GLenum, GLuint, GLenum severity, GLsizei, const GLcha
 namespace AntWorld 
 {
 Camera::Camera(sf::Window &window, Renderer &renderer, const cv::Size &renderSize)
- :  m_Window(window), m_Renderer(renderer), m_PoseX(0.0), m_PoseY(0.0), m_PoseZ(0.0),
-    m_PoseYaw(0.0), m_PosePitch(0.0), m_PoseRoll(0.0), m_RenderSize(renderSize)
+ :  m_PoseX(0.0), m_PoseY(0.0), m_PoseZ(0.0), m_PoseYaw(0.0), m_PosePitch(0.0), m_PoseRoll(0.0), 
+    m_RenderSize(renderSize), m_Window(window), m_Renderer(renderer)
 {}
 //----------------------------------------------------------------------------
 sf::Window &Camera::getWindow() const
@@ -115,9 +115,18 @@ bool Camera::isOpen() const
 std::unique_ptr<sf::Window> Camera::initialiseWindow(const cv::Size &size)
 {
     // Create SFML window
-    auto window = std::make_unique<sf::Window>(sf::VideoMode(sf::Vector2u(size.width, size.height)),
-                                               "Ant world",
-                                               sf::Style::Titlebar | sf::Style::Close);
+    // **YUCK**
+    auto window = std::make_unique<sf::Window>(
+        sf::VideoMode(
+#if (SFML_VERSION_MAJOR == 3)
+            sf::Vector2u(size.width, size.height)),
+#elif (SFML_VERSION_MAJOR == 2)
+            size.width, size.height),                                           
+#else
+    #error Unsupported SFML version
+#endif
+        "Ant world",
+        sf::Style::Titlebar | sf::Style::Close);
 
     // Enable VSync
     window->setVerticalSyncEnabled(true);
