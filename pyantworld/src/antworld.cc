@@ -84,20 +84,55 @@ void setClearColour(const std::tuple<GLfloat, GLfloat, GLfloat, GLfloat> &colour
                  std::get<2>(colour), std::get<3>(colour));
 }
 
-std::unique_ptr<AntWorld::RenderMeshSpherical> createRenderMeshSpherical(double horizontalFOV, double verticalFOV, double startLongitude,
-                                                                         unsigned int numHorizontalSegments, unsigned int numVerticalSegments)
-{
-    return std::make_unique<AntWorld::RenderMeshSpherical>(degree_t{horizontalFOV}, degree_t{verticalFOV}, degree_t{startLongitude},
-                                                           numHorizontalSegments, numVerticalSegments);
-}
-
-class AntAgent
+class RenderMeshBuilder
 {
 public:
-    AntAgent(const std::tuple<int, int> &renderSize, std::unique_ptr<AntWorld::RenderMesh> renderMesh, 
-             GLsizei cubemapSize, double nearClip, double farClip)
+    virtual std::unique_ptr<AntWorld::RenderMesh> build() const = 0;
+};
+
+class RenderMeshCubeMapBuilder : public RenderMeshBuilder
+{
+public:
+    RenderMeshCubeMapBuilder() = default;
+    
+    virtual std::unique_ptr<AntWorld::RenderMesh> build() const override final
+    {
+        return std::make_unique<AntWorld::RenderMeshCubeMap>();
+    }
+};
+
+class RenderMeshSphericalBuilder : public RenderMeshBuilder
+{
+public:
+    RenderMeshSphericalBuilder(double horizontalFOV, double verticalFOV, double startLongitude,
+                               unsigned int numHorizontalSegments, unsigned int numVerticalSegments)
+    :   m_HorizontalFOV(horizontalFOV), m_VerticalFOV(verticalFOV), m_StartLongitude(startLongitude),
+        m_NumHorizontalSegments(numHorizontalSegments), m_NumVerticalSegments(numVerticalSegments)
+    {}
+    
+    virtual std::unique_ptr<AntWorld::RenderMesh> build() const override final
+    {
+        return std::make_unique<AntWorld::RenderMeshSpherical>(m_HorizontalFOV, m_VerticalFOV, 
+                                                               m_StartLongitude, m_NumHorizontalSegments,
+                                                               m_NumVerticalSegments);
+    }
+    
+private:
+    degree_t m_HorizontalFOV;
+    degree_t m_VerticalFOV;
+    degree_t m_StartLongitude;
+    unsigned int m_NumHorizontalSegments;
+    unsigned int m_NumVerticalSegments;
+};
+
+
+class Agent
+{
+public:
+    Agent(const std::tuple<int, int> &renderSize, const RenderMeshBuilder &renderMeshBuilder, 
+          GLsizei cubemapSize, double nearClip, double farClip)
     :   m_Window{AntWorld::Camera::initialiseWindow(cv::Size(std::get<0>(renderSize), std::get<1>(renderSize)))},
-        m_Renderer(std::move(renderMesh), cubemapSize, nearClip, farClip),
+        m_Renderer(std::move(renderMeshBuilder.build()), cubemapSize, nearClip, farClip),
         m_Camera(*m_Window, m_Renderer, cv::Size(std::get<0>(renderSize), std::get<1>(renderSize)))
     {}
 
@@ -159,8 +194,6 @@ public:
     }
     
 private:
-    
-
     std::unique_ptr<sf::Window> m_Window;
     AntWorld::Renderer m_Renderer;
     AntWorld::Camera m_Camera;
@@ -198,36 +231,37 @@ PYBIND11_MODULE(_antworld, m)
           pybind11::arg("density") = 1.0f);
     
     //------------------------------------------------------------------------
-    // RenderMesh
+    // RenderMeshBuilder
     //------------------------------------------------------------------------
-    pybind11::class_<AntWorld::RenderMesh>(m, "RenderMesh");
+    pybind11::class_<RenderMeshBuilder>(m, "RenderMeshBuilder");
 
     //------------------------------------------------------------------------
-    // RenderMeshSpherical
+    // RenderMeshSphericalBuilderRenderMeshSphericalBuilder
     //------------------------------------------------------------------------
-    pybind11::class_<AntWorld::RenderMeshSpherical, AntWorld::RenderMesh>(m, "RenderMeshSpherical")
-        .def(pybind11::init(&createRenderMeshSpherical), pybind11::arg("horizontal_fov") = 360.0,
-             pybind11::arg("vertical_fov") = 75.0, pybind11::arg("start_longitude") = 15.0,
-             pybind11::arg("num_horizontal_segments") = 40, pybind11::arg("num_vertical_segments") = 10);
+    pybind11::class_<RenderMeshSphericalBuilder, RenderMeshBuilder>(m, "RenderMeshSphericalBuilder")
+        .def(pybind11::init<double, double, double, unsigned int, unsigned int>(), 
+             pybind11::arg("horizontal_fov") = 360.0, pybind11::arg("vertical_fov") = 75.0, 
+             pybind11::arg("start_longitude") = 15.0, pybind11::arg("num_horizontal_segments") = 40, 
+             pybind11::arg("num_vertical_segments") = 10);
     
     //------------------------------------------------------------------------
-    // RenderMeshCubeMap
+    // RenderMeshCubeMapBuilder
     //------------------------------------------------------------------------
-    pybind11::class_<AntWorld::RenderMeshCubeMap, AntWorld::RenderMesh>(m, "RenderMeshCubeMap")
+    pybind11::class_<RenderMeshCubeMapBuilder, RenderMeshBuilder>(m, "RenderMeshCubeMapBuilder")
         .def(pybind11::init<>());
 
     //------------------------------------------------------------------------
-    // AntAgent
+    // Agent
     //------------------------------------------------------------------------
-    pybind11::class_<AntAgent>(m, "AntAgent")
-        .def(pybind11::init<const std::tuple<int, int>&, std::unique_ptr<AntWorld::RenderMesh>, GLsizei, double, double>(),
-             pybind11::arg("render_size"), pybind11::arg("render_mesh"), pybind11::arg("cubemap_size") = 256,
+    pybind11::class_<Agent>(m, "Agent")
+        .def(pybind11::init<const std::tuple<int, int>&, const RenderMeshBuilder&, GLsizei, double, double>(),
+             pybind11::arg("render_size"), pybind11::arg("render_mesh_builder"), pybind11::arg("cubemap_size") = 256,
              pybind11::arg("near_clip") = 0.001, pybind11::arg("far_clip") = 1000.0)
 
-        .def("display", &AntAgent::display)
-        .def("load_world", &AntAgent::loadWorld, pybind11::arg("filename"),
+        .def("display", &Agent::display)
+        .def("load_world", &Agent::loadWorld, pybind11::arg("filename"),
              pybind11::arg("clear") = true)
-        .def("set_position", &AntAgent::setPosition)
-        .def("set_attitude", &AntAgent::setAttitude);
+        .def("set_position", &Agent::setPosition)
+        .def("set_attitude", &Agent::setAttitude);
 
 }

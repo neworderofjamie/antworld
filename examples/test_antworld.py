@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 import cv2
-from pyantworld import AntAgent, RenderMeshSpherical
+from pyantworld import Agent, RenderMeshSphericalBuilder
+from pyantworld import init_logging
 
+init_logging()
 # Old Seville data (lower res, but loads faster)
 # worldpath = antworld.bob_robotics_path + "/resources/antworld/world5000_gray.bin"
 # z = 0.01 # m
@@ -10,7 +12,7 @@ from pyantworld import AntAgent, RenderMeshSpherical
 worldpath = "/its/home/jk421/bob_robotics/resources/antworld/canberra.obj"
 z = 1.5 # m (for some reason the ground is at ~1.5m for this world)
 
-agent = AntAgent((720, 150), RenderMeshSpherical(), cubemap_size=512, near_clip=0.1)
+agent = Agent((720, 150), RenderMeshSphericalBuilder(), cubemap_size=512, near_clip=0.1)
 (xlim, ylim, zlim) = agent.load_world(worldpath)
 xstart = xlim[0] + (xlim[1] - xlim[0]) / 2.0
 y = ylim[0] + (ylim[1] - ylim[0]) / 2.0
