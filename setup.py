@@ -91,7 +91,7 @@ if WIN:
 # Otherwise
 else:
     # Loop through pacakges
-    for pkg in ["opencv4", "sfml", "units", "plog", "glew"]:
+    for pkg in ["opencv4", "sfml-window", "glew"]:
         # Add whatever configuration libffi requires
         ffi_config = pkgconfig.parse(pkg)
         for k, v in ffi_config.items():
