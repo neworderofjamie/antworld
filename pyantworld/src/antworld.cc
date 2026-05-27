@@ -141,16 +141,17 @@ public:
         m_Camera.display();
     }
 
-    std::array<std::array<double, 2>, 3> loadWorld(const std::string &filename, bool clear)
+    std::array<std::tuple<double, double>, 3> loadWorld(const std::string &filename, bool clear)
     {
         auto &world = m_Renderer.getWorld();
         const auto ext = std::filesystem::path(filename).extension();
-        if (ext == "bin") {
+
+        if (ext == ".bin") {
             // Load with default world and ground colours
             world.load(filename, { 0.0f, 1.0f, 0.0f },
                        { 0.898f, 0.718f, 0.353f }, clear);
         } 
-        else if (ext == "obj") {
+        else if (ext == ".obj") {
             world.loadObj(filename, 1.0f, -1, GL_RGB, clear);
         } 
         else {
@@ -161,9 +162,9 @@ public:
         const auto &worldMin = world.getMaxBound();
         const auto &worldMax = world.getMinBound();
         return {
-            std::array<double, 2>{worldMin[0].value(), worldMax[0].value()},
-            std::array<double, 2>{worldMin[1].value(), worldMax[1].value()},
-            std::array<double, 2>{worldMin[2].value(), worldMax[2].value()}};
+            std::make_tuple(worldMin[0].value(), worldMax[0].value()),
+            std::make_tuple(worldMin[1].value(), worldMax[1].value()),
+            std::make_tuple(worldMin[2].value(), worldMax[2].value())};
     }
     
     pybind11::array_t<uint8_t> readFrame()
@@ -261,6 +262,7 @@ PYBIND11_MODULE(_antworld, m)
         .def("display", &Agent::display)
         .def("load_world", &Agent::loadWorld, pybind11::arg("filename"),
              pybind11::arg("clear") = true)
+        .def("read_frame", &Agent::readFrame)
         .def("set_position", &Agent::setPosition)
         .def("set_attitude", &Agent::setAttitude);
 

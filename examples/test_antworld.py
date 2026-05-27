@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import cv2
 from pyantworld import Agent, RenderMeshSphericalBuilder
-from pyantworld import init_logging
+from pyantworld import init_logging, set_fog
 
 init_logging()
 # Old Seville data (lower res, but loads faster)
@@ -14,6 +14,7 @@ z = 1.5 # m (for some reason the ground is at ~1.5m for this world)
 
 agent = Agent((720, 150), RenderMeshSphericalBuilder(), cubemap_size=512, near_clip=0.1)
 (xlim, ylim, zlim) = agent.load_world(worldpath)
+print(xlim, ylim, zlim)
 xstart = xlim[0] + (xlim[1] - xlim[0]) / 2.0
 y = ylim[0] + (ylim[1] - ylim[0]) / 2.0
 
@@ -27,8 +28,8 @@ fogit = [{"mode": "disabled"},
          {"mode": "exp2", "density": 0.5, "colour": (0.75, 0.75, 0.75, 1.0)}]
 
 for x, f in enumerate(fogit):
-    agent.set_position(xstart + (x * 0.5), y, z)
-    agent.set_fog(**f)
+    agent.set_position((xstart + (x * 0.5), y, z))
+    set_fog(**f)
     im = agent.read_frame()
     filename = "antworld%i.png" % x
     print("Saving image as %s..." % filename)
