@@ -11,7 +11,7 @@ ARFLAGS:=-rcs
 
 ifdef DYNAMIC
     PREFIX:=$(PREFIX)_dynamic
-    CXXFLAG+=-fPIC
+    CXXFLAGS+=-fPIC
     LIBRARY_EXTENSION:=so
 else
     LIBRARY_EXTENSION:=a

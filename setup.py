@@ -135,7 +135,7 @@ if build_antworld_libs:
                     cwd=abs_antworld_path)
     else:
         # Define make arguments
-        make_arguments = ["make", "backend", "DYNAMIC=1",
+        make_arguments = ["make", "DYNAMIC=1",
                           f"LIBRARY_DIRECTORY={os.path.join(abs_antworld_path, 'pyantworld')}",
                           f"--jobs={cpu_count(logical=False)}"]
         if debug_build:
