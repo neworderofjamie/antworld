@@ -1,3 +1,4 @@
+build
 x64
 obj*
 .vs
@@ -8,4 +9,6 @@ vcpkg_installed
 *.exe
 *.pdb
 *.dll
+*.so
+*.a
 /**/__pycache__/
