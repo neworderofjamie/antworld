@@ -77,9 +77,8 @@ if WIN:
                                            else ("lib",)))
     antworld_extension_kwargs["library_dirs"].append(vcpkg_lib)
 
-    
-    # Link OpenGL as it's used directly in extension
-    antworld_extension_kwargs["libraries"].append("OpenGL32")
+    # Link OpenGL and OpenCV as they are used directly in extension
+    antworld_extension_kwargs["libraries"].extend(["OpenGL32", "opencv_core4"])
     
     # Turn off warnings about dll-interface being required for stuff to be
     # used by clients and prevent windows.h exporting TOO many awful macros
