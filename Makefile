@@ -3,7 +3,7 @@ OS_UPPER:=$(shell uname -s 2>/dev/null | tr [:lower:] [:upper:])
 DARWIN:=$(strip $(findstring DARWIN,$(OS_UPPER)))
 
 # Get directory of this makefile (means make can be invoked else where)
-ANTWORLD_DIR:=$(abspath $(dir $(lastword $(MAKEFILE_LIST)))../)
+ANTWORLD_DIR:=$(abspath $(dir $(lastword $(MAKEFILE_LIST))))
 
 # Set standard compiler and archiver flags
 CXXFLAGS+=-std=c++17 -march=native -Wall -Wpedantic -Wextra -MMD -MP -I$(ANTWORLD_DIR)/include
@@ -25,19 +25,19 @@ else
 endif 
 
 
-# Add prefix to object directory and library name
-OBJECT_DIRECTORY?=$(ANTWORLD_DIR)/obj$(PREFIX)
+# Get object, source and libary directories
+OBJECT_DIRECTORY:=$(ANTWORLD_DIR)/obj$(PREFIX)
+SOURCE_DIRECTORY:=$(ANTWORLD_DIR)/src
 LIBRARY_DIRECTORY?=$(ANTWORLD_DIR)/lib
-BIN_DIRECTORY?=$(ANTWORLD_DIR)/bin
 
 PACKAGES=pkg-config opengl opencv4 sfml-window
 LIBANTWORLD:=$(LIBRARY_DIRECTORY)/libantworld$(PREFIX).$(LIBRARY_EXTENSION)
 
 # Find source files
-SOURCES:=$(wildcard *.cc)
+SOURCES:=$(wildcard $(SOURCE_DIRECTORY)/*.cc)
 
 # Add object directory prefix
-OBJECTS:=$(SOURCES:%.cc=$(OBJECT_DIRECTORY)/%.o)
+OBJECTS:=$(SOURCES:$(SOURCE_DIRECTORY)/%.cc=$(OBJECT_DIRECTORY)/%.o)
 DEPS:=$(OBJECTS:.o=.d)
 
 # Add GeNN include directories
@@ -66,7 +66,7 @@ endif
 
 -include $(DEPS)
 
-$(OBJECT_DIRECTORY)/%.o: %.cc $(OBJECT_DIRECTORY)/%.d
+$(OBJECT_DIRECTORY)/%.o: $(SOURCE_DIRECTORY)/%.cc $(OBJECT_DIRECTORY)/%.d
 	mkdir -p $(@D)
 	$(CXX) -std=c++17 $(CXXFLAGS) -c -o $@ $<
 
