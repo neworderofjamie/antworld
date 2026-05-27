@@ -31,16 +31,8 @@ class ANTWORLD_EXPORT Renderer
     using meter_t = units::length::meter_t;
 
 public:
-    static inline const struct SphericalRenderMesh{} sphericalRenderMesh;
-    static inline const struct CubeMapRenderMesh{} cubeMapRenderMesh;
-
-    // Legacy spherical cubemap constructor
-    Renderer(GLsizei cubemapSize = 256, double nearClip = 0.001, double farClip = 1000.0,
-             degree_t horizontalFOV = degree_t{360.0}, degree_t verticalFOV = degree_t{75.0});
-        
-    Renderer(SphericalRenderMesh, GLsizei cubemapSize = 256, double nearClip = 0.001, double farClip = 1000.0,
-             degree_t horizontalFOV = degree_t{360.0}, degree_t verticalFOV = degree_t{75.0});
-    Renderer(CubeMapRenderMesh, GLsizei cubemapSize = 256, double nearClip = 0.001, double farClip = 1000.0);
+    Renderer(std::unique_ptr<RenderMesh> renderMesh, GLsizei cubemapSize, 
+             double nearClip, double farClip);
 
     virtual ~Renderer();
 
@@ -67,16 +59,6 @@ public:
     World &getWorld(){ return m_World; }
     const World &getWorld() const{ return m_World; }
 
-protected:
-    Renderer(std::unique_ptr<RenderMesh> renderMesh, GLsizei cubemapSize, 
-             double nearClip, double farClip);
-    
-    //------------------------------------------------------------------------
-    // Declared virtuals
-    //------------------------------------------------------------------------
-    virtual void renderPanoramicGeometry();
-    virtual void renderFirstPersonGeometry();
-    virtual void renderTopDownGeometry();
 
 private:
     //------------------------------------------------------------------------
